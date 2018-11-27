@@ -1,0 +1,27 @@
+its better to create database for practice.
+
+sqoop import \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--table departments \
+--hive-import \				//we dont mention target-dir, it by-defaults creates dir in your hdfs home and creates managed table.
+--hive-database orders_r \
+--hive-table randeep			//creates table "randeep", if not specified, mysql's table name will be copied as it is.
+--num-mapper 2
+
+
+
+BY DEFAULT, THE HIVE IMPORT IS IN APPEND MODE. , USE --hive-overwrite	TO OVERWRITE.
+USE --hive-create-table. this will fail, if the table already exists.
+
+sqoop import \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--table departments \
+--hive-import \
+--hive-database orders_r \
+--create-hive-table \
+--fields-terminated-by "-" \
+--lines-terminated-by "\n"	//only "\n" is supported in case of HIVE import FOR LINES-TERMINATED-BY

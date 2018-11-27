@@ -1,0 +1,9 @@
+--n, -num-mappers -> to specify number of mappers
+--append -> creates new files according to number of mappers in the same directory.
+--delete-target-dir -> deletes the specified output directory if exists already.
+--auto-reset-to-one-mapper -> useful in case table doesn't have primary key.
+--split-by -> to explicitly specify the split by column.
+-Dorg.apache.sqoop.splitter.allow_text_splitter=true -> if split-by coloumn is of text type
+--table -> table name
+--warehouse-dir
+--target-dir
