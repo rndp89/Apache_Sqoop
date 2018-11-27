@@ -1,0 +1,26 @@
+ mysql -u retail_user -h ms.itversity.com -p
+ mysql -u retail_dba -h nn01.itversity.com -p
+ mysql -u hr_user -h ms.itversity.com -p
+ 
+to check the port number of mysql, if 3306 is not the port.
+	 SHOW GLOBAL VARIABLES LIKE 'PORT';
+ 
+run ==> sqoop version // validate running this command during certification.
+
+make sure this jar file is here. mysql-connector-java.jar
+
+/usr/hdp/current/sqoop-client/lib
+
+list-databases
+	sqoop-list-databases
+	sqoop list-databases \
+	--connect jdbc:mysql://ms.itversity.com:3306 \ // no need to provide db name	//3306 is optional unless the port number is different
+	--username retail_user
+	--password itversity // its hardcoded, -P to prompt for password, or --password-file <fully qualified path of the filename> for security purposes
+	
+list tables	
+	sqoop list-tables --connect jdbc:mysql://nn01.itversity.com:3306/retail_db  //have to provide db name
+	--username retail_dba --password itversity
+
+									
+

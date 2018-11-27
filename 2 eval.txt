@@ -1,0 +1,34 @@
+eval
+Any valid sql query or command can be run using sqoop eval. It is primarily used to load or query log tables while running Sqoop jobs at regular intervals.
+	syntax
+		sqoop eval \
+		--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+		--username retail_user \
+		--password itversity \
+		--query "SELECT * FROM orders LIMIT 10" // You can also use "-e" inplace of --query
+
+		sqoop eval \
+		--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+		--username retail_user \
+		--password itversity \
+		--query "INSERT INTO orders VALUES (10000, "2017-10-31 00:00:00.0", 10000, "DUMMY") // no access to this table so won't work.
+		
+	sqoop eval \
+		  --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+		  --username retail_user \
+		  --password itversity \
+		  --query "CREATE TABLE dummy (i INT)"
+
+	sqoop eval \
+		  --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+		  --username retail_user \
+		  --password itversity \
+		  --query "INSERT INTO dummy VALUES (1)"
+
+	sqoop eval \
+		  --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+		  --username retail_user \
+		  --password itversity \
+		  --query "SELECT * FROM dummy"
+		
+its very useful for automation, like you want to verify the number of records in table and cross verify after the export/import is done.
