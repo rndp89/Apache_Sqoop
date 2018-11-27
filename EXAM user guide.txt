@@ -1,0 +1,6 @@
+user guide to use - Sqoop 1.4.6
+refer sqoop documentation @ https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html
+
+1. sqoop help <command name> // it will give help page
+
+try not to run tail or cat commands IN EXAM

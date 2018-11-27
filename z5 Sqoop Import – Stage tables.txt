@@ -1,0 +1,22 @@
+when there is a duplicate row in the target table of mysql.
+and we use sqoop export, one of the mapper which is trying to copy the data will fail.
+Hence, data will be partially loaded into the mysql table.
+
+To overcome this problem, We use --staging-table.
+
+for this to use, we have to manually create a table in mysql with same structure.
+
+sqoop will first copy the data into staging table and then from staging table to target table.
+This will overcome the problem of partial data load, as the primary key constraint will not let even single row to be loaded.
+
+--clear-staging-table // we use this to clear the table, if there is existing data.
+
+sqoop export \
+--connect jdbc:mysql://ms.itversity.com/retail_export \
+--username retail_user \
+--password itversity \
+--export-dir /user/hive/warehouse/randeep/orders.db/order_revenue \
+--table randeep \
+--staging-table randeep_stage \
+--clear-staging-table \
+--input-fields-terminated-by '\001' \

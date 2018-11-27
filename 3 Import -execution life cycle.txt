@@ -1,0 +1,67 @@
+IMPORT
+
+Execution Life Cycle
+Here is the execution life cycle of Sqoop.
+
+Connect to source database and get metadata
+Generate java file with metadata and compile to jar file
+Apply boundaryvalsquery to apply split logic, default 4
+Use split boundaries to issue queries against source database
+Each thread will have different connection to issue the query
+Each thread will get mutually exclusive sub set of the data
+Data will be written to HDFS in a separate file per thread
+data imported will be by default delimited by ","
+
+--warehouse-dir // its the the parent hdfs directory under which the directory with the table name will be created....it should not be already there
+				//will be useful in automation, where we have multiple tables
+--target-dir //its the destination hdfs directory.....it should not be already there
+-m, --num-mappers <n> // sqoop uses 4 mappers by default to scale the import job, you can also specify the number of mapper using this option.
+		sqoop will run query to find min and max of primary key, and divide the record by number of mapper to obtain mutually exclusive data set.
+
+	sqoop import --connect jdbc:mysql://ms.itversity.com/retail_db \
+			--username retail_user --password itversity \
+			--table order_items \
+			--target-dir /user/randeep89/sqoop_import/retail_db/order_items
+			
+	sqoop import \
+			  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+			  --username retail_user \
+			  --password itversity \
+			  --table order_items \
+			  --warehouse-dir /user/randeep89/sqoop_import/retail_db
+			  
+
+get this url from the logs of import and track the job using the below url
+18/11/04 04:25:53 INFO mapreduce.Job: The url to track the job: http://rm01.itversity.com:19288/proxy/application_1540458187951_4066/
+
+
+	sqoop import \
+			  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+			  --username retail_user \
+			  --password itversity \
+			  --table order_items \
+			  --warehouse-dir /user/randeep89/sqoop_import/retail_db
+			  -m 1 //restricting mapper to just 1, as the data set is very small.
+			  
+BE CAREFUL, WHILE SPECIFYING THE NUMBER OF MAPPERS EXPLICITLY AS IT CAN HAVE SEVERE IMPACT ON THE MISSION CRITICAL DATABASES.
+
+
+//delete the output directory if exists
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 1 \
+  --delete-target-dir
+
+//creates new files according to number of mappers in the same directory.
+ sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 1 \
+  --append

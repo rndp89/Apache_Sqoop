@@ -1,0 +1,9 @@
+--query, --where, -boundary-query will not work with import table.
+
+
+sqoop import-all-tables \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--warehouse-dir /user/randeep89/import-all/ \
+--autoreset-to-one-mapper		//important to use, if any of the tables don't have the primary key, it comes handy.

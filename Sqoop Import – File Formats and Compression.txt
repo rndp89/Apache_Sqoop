@@ -1,0 +1,51 @@
+BY default data is imported as textfile
+
+sequencefile -> simple binary format.
+avrodatafile -> binary JSON format.
+parquetfile -> binary columnar format.  (natural parallel processing, vertica etc. explore for interview)
+
+run ==> sqoop help import , then check  for available/supported file formats
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 2 \
+  --as-sequencefile
+  
+COMPRESSION
+
+Storage requirement in hadoop is 3x by default as we have replication factor is 3.
+it can be reduced significantly by using the compression appropriately.
+
+Compression
+Following are the steps to use compression.
+
+	Go to /etc/hadoop/conf and check core-site.xml for supported compression codecs (look for io.compression.codecs)
+	Use –compress to enable compression
+	If compression codec is not specified, it will use gzip by default   (use gunzip <filename> to unzip data)
+	Compression algorithm can be specified using compression-codec
+	
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 2 \
+  --as-textfile \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.GzipCodec
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 2 \
+  --as-textfile \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.SnappyCodec

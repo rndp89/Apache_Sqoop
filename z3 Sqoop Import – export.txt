@@ -1,0 +1,22 @@
+we have to specify the hdfs directory.
+we should have the table created in MYSQL before export unlike hive-import, where the table gets created on the go.
+
+number of columns and datatypes should match.
+
+
+sqoop export --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+--username retail_user --password itversity \
+--export-dir /user/hive/warehouse/randeep/orders.db/order_revenue \
+--table randeep \				table of RDBMS WHICH SHOULD ALREADY BE CREATED WITH MATCHING COLUMN DATATYPES.
+--input-fields-terminated-by "\001"
+
+
+sqoop export --connect \
+jdbc:mysql://ms.itversity.com:3306/retail_export \
+--username retail_user --password itversity \
+--export-dir /user/hive/warehouse/randeep/orders.db/order_revenue \
+--table randeep \
+--columns "order_date, revenue" \--order names should be same as target table and enclosed in quotes, if you dont want quotes,make sure there is no space.
+--input-fields-terminated-by "\001"
+
+

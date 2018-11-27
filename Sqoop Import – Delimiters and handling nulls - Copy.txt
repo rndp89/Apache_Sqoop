@@ -1,0 +1,20 @@
+mysql -u hr_user -h ms.itversity.com -p
+
+#Default behavior
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/hr_db \
+  --username hr_user \
+  --password itversity \
+  --table employees \
+  --warehouse-dir /user/dgadiraju/sqoop_import/hr_db
+  
+#Changing default delimiters and nulls
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/hr_db \
+  --username hr_user \
+  --password itversity \
+  --table employees \
+  --warehouse-dir /user/dgadiraju/sqoop_import/hr_db \
+  --null-non-string -1 \			\\<-- this was for non string, e.g. numeric		\\ --null-string <null-str>              for Null string representation
+  --fields-terminated-by "\000" \	\\ \000 is for ASCII null and we can use "\t" etc
+  --lines-terminated-by ":"

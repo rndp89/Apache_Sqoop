@@ -1,0 +1,51 @@
+﻿By default number of mappers is 4, it can be changed with –num-mappers
+	Split logic will be applied on primary key, if exists
+	If primary key does not exists and if we use number of mappers more than 1, then sqoop import will fail
+	At that time we can use –split-by to split on a non key column or explicitly set –num-mappers to 1 
+		or use –auto-reset-to-one-mapper
+	If the primary key column or the column specified in split-by clause is non numeric type, 
+		then we need to use this additional argument
+			-Dorg.apache.sqoop.splitter.allow_text_splitter=true
+
+
+Using split-by
+	For performance reason choose a column which is indexed as part of split-by clause
+	If there are null values in the column, corresponding records from the table will be ignored
+	Data in the split-by column need not be unique, but if there are duplicates then there can be skew in the data while importing (which means some files might be relatively bigger compared to other files)
+	
+THINGS TO REMEMBER WHILE USING SPLIT-BY
+	Column should be indexed
+	values in the fields should be sparse
+	preferably, values should be evenly incremented
+	it should not have null values, null values will be ignored.
+	
+sqoop import \
+	  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+	  --username retail_user \
+	  --password itversity \
+	  --table order_items \
+	  --warehouse-dir /user/randeep89/sqoop_import/retail_db
+	  --split-by order_items_order_id
+	  
+you can use split-by date, but the data will dense, think of cons before considering a cloumn for split-by.
+sometimes we use split-by even if the primary key column is there based on needs.
+
+sqoop import \
+  -Dorg.apache.sqoop.splitter.allow_text_splitter=true \   if its common in your project, modify your sqoop.properties asking your admin to do so.
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table orders \
+  --warehouse-dir /user/randeep89/sqoop_import/retail_db \
+  --split-by order_status
+  
+//INCASE YOU HAVE MULTIPLE TABLES IN A DATABASE AND SOME OF THEM ARE NOT HAVING PRIMARY KEY. YOUR SQOOP IMPORT WILL FAIL WITH DEFAULT 4 MAPPERS.
+//YOU CAN USE Auto reset to one mapper, it will reduce mapper to 1 in case of no-primary-key.
+sqoop import \
+	  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+	  --username retail_user \
+	  --password itversity \
+	  --table order_items \
+	  --warehouse-dir /user/randeep89/sqoop_import/retail_db
+	  --auto-reset-to-one-mapper
+	  

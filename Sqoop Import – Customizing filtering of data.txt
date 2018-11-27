@@ -1,0 +1,40 @@
+Boundary query, basically your query should produce two values min and max
+
+	sqoop import \
+	  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+	  --username retail_user \
+	  --password itversity \
+	  --table order_items \
+	  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+	  --boundary-query "select min(order_items_id), max(order_items_id) from order_items where order_items_id > 99999
+	
+	sqoop import \
+	  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+	  --username retail_user \
+	  --password itversity \
+	  --table order_items \
+	  --warehouse-dir /user/randeep89/candelete \
+	  --boundary-query 'select 100000, 172198'		// it will work on primary key column
+	  
+YOU CANNOT USE --query and --table/--column together.
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --table order_items \
+  --columns order_item_order_id,order_item_id,order_item_subtotal \   //there shouldn't be any space with commas
+  --warehouse-dir /user/dgadiraju/sqoop_import/retail_db \
+  --num-mappers 2
+  
+ALWAYS USE --split-by with --query, IF NUMBER OF MAPPERS ARE MORE THAN ONE
+WE CANNOT USE --warehouse-dir with --query, because we are not using --table.
+
+sqoop import \
+  --connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+  --username retail_user \
+  --password itversity \
+  --target-dir /user/dgadiraju/sqoop_import/retail_db/orders_with_revenue \
+  --num-mappers 2 \
+  --query "select o.*, sum(oi.order_item_subtotal) order_revenue from orders o join order_items oi on o.order_id = oi.order_item_order_id and \$CONDITIONS group by o.order_id, o.order_date, o.order_customer_id, o.order_status" \
+  --split-by order_id

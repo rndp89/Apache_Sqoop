@@ -1,0 +1,24 @@
+to update rows and add rows
+
+
+THIS COMMAND WILL ONLY UPDATE THE MATCHING ROWS AND WILL IGNORE NEW ROWS.
+sqoop export --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+--username retail_user \
+--password itversity \
+--export-dir /user/hive/warehouse/randeep/orders.db/order_revenue \
+--table randeep \				table of RDBMS WHICH SHOULD ALREADY BE CREATED WITH MATCHING COLUMN DATATYPES.
+--update-key order_date \  
+--input-fields-terminated-by "\001"
+
+
+THIS COMMAND WILL UPDATE THE ROWS AS WELL AS ALL THE NEW INSERTS.
+sqoop export --connect jdbc:mysql://ms.itversity.com:3306/retail_export \
+--username retail_user \
+--password itversity \
+--export-dir /user/hive/warehouse/randeep/orders.db/order_revenue \
+--table randeep \				table of RDBMS WHICH SHOULD ALREADY BE CREATED WITH MATCHING COLUMN DATATYPES.
+--update-key order_date \
+--update-mode allowinsert \
+--input-fields-terminated-by "\001"
+
+
